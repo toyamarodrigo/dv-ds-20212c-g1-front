@@ -10,7 +10,7 @@ export const prendasApi = createApi({
     getPrendasPageable: builder.query<PrendaPageable, void>({
       query: () => `/prendas`,
     }),
-    getPrendas: builder.query<Prenda, void>({
+    getPrendas: builder.query<Prenda[], void>({
       query: () => `/prendas/all`,
     }),
     getPrenda: builder.query<Prenda, string>({

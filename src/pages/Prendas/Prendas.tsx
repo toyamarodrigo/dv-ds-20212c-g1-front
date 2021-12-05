@@ -1,13 +1,35 @@
-import React from "react";
-import { Stack, Text } from "@chakra-ui/layout";
+import React, { useState } from "react";
+import { Box, Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
 import { useNavigate } from "react-router-dom";
-import { IconButton } from "@chakra-ui/button";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
+import { Button, IconButton } from "@chakra-ui/button";
+import { AddIcon, ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
+import { FaTrashAlt } from "react-icons/fa";
+import { ResponsiveValue } from "@chakra-ui/styled-system";
+import { useDisclosure } from "@chakra-ui/hooks";
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+} from "@chakra-ui/modal";
 
 import { BasicLayout } from "../../layout";
+import { useGetPrendasQuery } from "../../services/api.tiendaropita.prendas";
+import { Prenda } from "../../model/prenda";
 
 export const Prendas = () => {
+  const [selectedPrenda, setSelectedPrenda] = useState(null);
+  const { data, isLoading, isSuccess } = useGetPrendasQuery();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
+  const cancelRef = React.useRef();
+
+  const handleDelete = (prenda: Prenda) => {
+    setSelectedPrenda(prenda);
+    onOpen();
+  };
 
   return (
     <BasicLayout>
@@ -17,6 +39,123 @@ export const Prendas = () => {
           Prendas
         </Text>
       </Stack>
+      <Stack direction="column" w="800px">
+        <Stack direction="row">
+          <Button
+            colorScheme="whatsapp"
+            leftIcon={<AddIcon />}
+            onClick={() => navigate("/prendas/new")}
+          >
+            Agregar Prenda
+          </Button>
+        </Stack>
+        <Stack>
+          {isSuccess && (
+            <Grid
+              borderRadius="6px"
+              borderWidth="2px"
+              mt={4}
+              pb={4}
+              templateColumns="repeat(5, 1fr)"
+            >
+              <TableHeaderText pl={8}>ID</TableHeaderText>
+              <TableHeaderText>DESCRIPCION</TableHeaderText>
+              <TableHeaderText>TIPO</TableHeaderText>
+              <TableHeaderText textAlign="center">PRECIO</TableHeaderText>
+              <TableHeaderText textAlign="center">ACCION</TableHeaderText>
+
+              {data.map((prenda) => (
+                <React.Fragment key={prenda.id}>
+                  <GridItem pt={4}>
+                    <Text pl={8} textAlign="left">
+                      {prenda.id}
+                    </Text>
+                  </GridItem>
+                  <GridItem pt={4}>
+                    <Text textAlign="left">{prenda.descripcion}</Text>
+                  </GridItem>
+                  <GridItem pt={4}>
+                    <Text textAlign="left">{prenda.tipo}</Text>
+                  </GridItem>
+                  <GridItem pt={4}>
+                    <Text textAlign="center">{prenda.precioBase}</Text>
+                  </GridItem>
+                  <GridItem pt={4}>
+                    <IconButton
+                      aria-label="Edit Negocio"
+                      colorScheme="yellow"
+                      icon={<EditIcon />}
+                      mr={2}
+                      onClick={() => navigate(`/prendas/edit`, { state: { prenda } })}
+                    />
+                    <IconButton
+                      aria-label="Edit Negocio"
+                      colorScheme="red"
+                      icon={<FaTrashAlt />}
+                      onClick={() => handleDelete(prenda)}
+                    />
+                  </GridItem>
+                </React.Fragment>
+              ))}
+              <DeleteModal
+                cancelRef={cancelRef}
+                isOpen={isOpen}
+                prenda={selectedPrenda}
+                onClose={onClose}
+              />
+            </Grid>
+          )}
+        </Stack>
+      </Stack>
     </BasicLayout>
+  );
+};
+
+interface ITableText {
+  textAlign?: ResponsiveValue<CanvasTextAlign>;
+  pl?: number;
+  children: React.ReactNode;
+}
+
+const TableHeaderText = ({ textAlign = "left", children, pl }: ITableText) => {
+  return (
+    <GridItem bgColor="gray.200" py={4}>
+      <Text color="#4A556B" fontSize="12px" fontWeight={700} pl={pl} textAlign={textAlign}>
+        {children}
+      </Text>
+    </GridItem>
+  );
+};
+
+const DeleteModal = ({ isOpen, onClose, cancelRef, prenda }) => {
+  if (!prenda) return null;
+
+  return (
+    <AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            Borrar Prenda
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            Esta seguro que desea borrar la prenda{" "}
+            <Box as="span" fontWeight={600}>
+              {prenda.descripcion}
+            </Box>
+            ?
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            <Button ref={cancelRef} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button colorScheme="red" ml={3} onClick={onClose}>
+              Delete
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
   );
 };

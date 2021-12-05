@@ -8,6 +8,8 @@ import { NewCliente } from "../pages/Clientes/NewCliente/NewCliente";
 import { EditSucursal } from "../pages/Negocios/EditSucursal/EditSucursal";
 import { NewSucursal } from "../pages/Negocios/NewSucursal/NewSucursal";
 import { Prendas } from "../pages/Prendas";
+import { EditPrenda } from "../pages/Prendas/EditPrenda/EditPrenda";
+import { NewPrenda } from "../pages/Prendas/NewPrenda/NewPrenda";
 import { Ventas } from "../pages/Ventas";
 
 export const Router = () => {
@@ -22,6 +24,9 @@ export const Router = () => {
         <Route element={<Clientes />} path="/clientes" />
         <Route element={<NewCliente />} path="/clientes/new" />
         <Route element={<EditCliente />} path="/clientes/edit" />
+        <Route element={<Prendas />} path="/prendas" />
+        <Route element={<NewPrenda />} path="/prendas/new" />
+        <Route element={<EditPrenda />} path="/prendas/edit" />
         <Route element={<Prendas />} path="/prendas" />
       </Routes>
     </BrowserRouter>
