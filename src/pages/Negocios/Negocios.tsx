@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@chakra-ui/button";
 import { AddIcon, ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
 import { ResponsiveValue } from "@chakra-ui/styled-system";
+import { Spinner } from "@chakra-ui/spinner";
 
 import { BasicLayout } from "../../layout";
 import { useGetNegociosPageableQuery } from "../../services/api.tiendaropita.negocios";
@@ -12,7 +13,12 @@ export const Negocios = () => {
   const navigate = useNavigate();
   const { data, isLoading, isSuccess } = useGetNegociosPageableQuery();
 
-  console.log("data :>> ", data);
+  // if (isLoading)
+  //   return (
+  //     <BasicLayout>
+  //       <Spinner size="lg" />
+  //     </BasicLayout>
+  //   );
 
   return (
     <BasicLayout>
@@ -32,7 +38,8 @@ export const Negocios = () => {
             Agregar Sucursal
           </Button>
         </Stack>
-        <Stack>
+        <Stack alignItems="center">
+          {isLoading && <Spinner size="lg" textAlign="center" />}
           {isSuccess && (
             <Grid
               borderRadius="6px"
@@ -40,6 +47,7 @@ export const Negocios = () => {
               mt={4}
               pb={4}
               templateColumns="repeat(4, 1fr)"
+              w="100%"
             >
               <TableHeaderText pl={8}>ID</TableHeaderText>
               <TableHeaderText>SUCURSAL</TableHeaderText>

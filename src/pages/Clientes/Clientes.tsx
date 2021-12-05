@@ -14,6 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
 } from "@chakra-ui/modal";
+import { Spinner } from "@chakra-ui/spinner";
 
 import { BasicLayout } from "../../layout";
 import { useGetClientesQuery } from "../../services/api.tiendaropita.clientes";
@@ -30,6 +31,13 @@ export const Clientes = () => {
     setSelectedCliente(cliente);
     onOpen();
   };
+
+  // if (isLoading)
+  //   return (
+  //     <BasicLayout>
+  //       <Spinner size="lg" />
+  //     </BasicLayout>
+  //   );
 
   return (
     <BasicLayout>
@@ -49,7 +57,8 @@ export const Clientes = () => {
             Agregar Cliente
           </Button>
         </Stack>
-        <Stack>
+        <Stack alignItems="center">
+          {isLoading && <Spinner size="lg" textAlign="center" />}
           {isSuccess && (
             <Grid
               borderRadius="6px"
@@ -57,6 +66,7 @@ export const Clientes = () => {
               mt={4}
               pb={4}
               templateColumns="repeat(4, 1fr)"
+              w="100%"
             >
               <TableHeaderText pl={8}>ID</TableHeaderText>
               <TableHeaderText>NOMBRE</TableHeaderText>

@@ -14,6 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
 } from "@chakra-ui/modal";
+import { Spinner } from "@chakra-ui/spinner";
 
 import { BasicLayout } from "../../layout";
 import { useGetPrendasQuery } from "../../services/api.tiendaropita.prendas";
@@ -30,6 +31,13 @@ export const Prendas = () => {
     setSelectedPrenda(prenda);
     onOpen();
   };
+
+  // if (isLoading)
+  //   return (
+  //     <BasicLayout>
+  //       <Spinner size="lg" />
+  //     </BasicLayout>
+  //   );
 
   return (
     <BasicLayout>
@@ -49,7 +57,8 @@ export const Prendas = () => {
             Agregar Prenda
           </Button>
         </Stack>
-        <Stack>
+        <Stack alignItems="center">
+          {isLoading && <Spinner size="lg" textAlign="center" />}
           {isSuccess && (
             <Grid
               borderRadius="6px"
@@ -57,6 +66,7 @@ export const Prendas = () => {
               mt={4}
               pb={4}
               templateColumns="repeat(5, 1fr)"
+              w="100%"
             >
               <TableHeaderText pl={8}>ID</TableHeaderText>
               <TableHeaderText>DESCRIPCION</TableHeaderText>
