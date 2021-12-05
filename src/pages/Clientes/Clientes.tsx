@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
+import { Box, Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
 import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@chakra-ui/button";
 import { AddIcon, ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
@@ -90,15 +90,15 @@ export const Clientes = () => {
                       icon={<FaTrashAlt />}
                       onClick={() => handleDelete(cliente)}
                     />
-                    <DeleteModal
-                      cancelRef={cancelRef}
-                      cliente={selectedCliente}
-                      isOpen={isOpen}
-                      onClose={onClose}
-                    />
                   </GridItem>
                 </React.Fragment>
               ))}
+              <DeleteModal
+                cancelRef={cancelRef}
+                cliente={selectedCliente}
+                isOpen={isOpen}
+                onClose={onClose}
+              />
             </Grid>
           )}
         </Stack>
@@ -127,7 +127,7 @@ const DeleteModal = ({ isOpen, onClose, cancelRef, cliente }) => {
   if (!cliente) return null;
 
   return (
-    <AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+    <AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
       <AlertDialogOverlay>
         <AlertDialogContent>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -135,7 +135,11 @@ const DeleteModal = ({ isOpen, onClose, cancelRef, cliente }) => {
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            Esta seguro que desea borrar el cliente {cliente.nombre} {cliente.apellido}?
+            Esta seguro que desea borrar el cliente{" "}
+            <Box as="span" fontWeight={600}>
+              {cliente.nombre} {cliente.apellido}
+            </Box>
+            ?
           </AlertDialogBody>
 
           <AlertDialogFooter>
