@@ -12,7 +12,7 @@ export const ventasApi = createApi({
     getVentasPageable: builder.query<VentaPageable, void>({
       query: () => `/ventas`,
     }),
-    getVentas: builder.query<Venta, void>({
+    getVentas: builder.query<Venta[], void>({
       query: () => `/ventas/all`,
     }),
     getVenta: builder.query<Venta, string>({
