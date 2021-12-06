@@ -19,7 +19,7 @@ export function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const btnMenuRef = useRef();
   const Links = [
-    { page: "/", name: "Home" },
+    { page: "/", name: "Tienda Ropita" },
     // { page: "/about", name: "About" },
     // { page: "/contact", name: "Contact" },
   ];
