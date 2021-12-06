@@ -39,7 +39,6 @@ export const Ventas = () => {
   };
 
   const handleDelete = (item) => {
-    console.log("item :>> ", item);
     setSelectedItem(item);
     onOpen();
   };
@@ -48,11 +47,9 @@ export const Ventas = () => {
     if (data) setVentas(data.map((venta) => ({ ...venta, isExpanded: false })));
   }, [data]);
 
-  console.log(ventas);
-
   return (
     <BasicLayout>
-      <Stack alignItems="center" direction="row" w="800px">
+      <Stack alignItems="center" direction="row" h="100%" w="800px">
         <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
         <Text fontSize="xl" fontWeight={600}>
           Ventas
@@ -123,7 +120,8 @@ export const Ventas = () => {
                     {venta.items.length > 0 && (
                       <IconButton
                         aria-label="Expand Sucursal"
-                        colorScheme="blackAlpha"
+                        bgColor="gray.500"
+                        color="white"
                         icon={!venta.isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
                         onClick={() => handleExpandVenta(venta)}
                       />
@@ -282,7 +280,9 @@ const TableHeaderItemText = ({ textAlign = "left", children, pl }: ITableText) =
 const TableCellItem = ({ textAlign = "left", children, pl, bgColor }: ITableText) => {
   return (
     <GridItem bgColor={bgColor} pl={pl} py={4}>
-      <Text textAlign={textAlign}>{children}</Text>
+      <Text color="black" textAlign={textAlign}>
+        {children}
+      </Text>
     </GridItem>
   );
 };
