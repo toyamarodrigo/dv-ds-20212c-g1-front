@@ -11,6 +11,10 @@ import { Prendas } from "../pages/Prendas";
 import { EditPrenda } from "../pages/Prendas/EditPrenda/EditPrenda";
 import { NewPrenda } from "../pages/Prendas/NewPrenda/NewPrenda";
 import { Ventas } from "../pages/Ventas";
+import { AddItem } from "../pages/Ventas/AddItem/AddItem";
+import { EditItem } from "../pages/Ventas/EditItem/EditItem";
+import { NewVentaEfectivo } from "../pages/Ventas/NewVentaEfectivo/NewVentaEfectivo";
+import { NewVentaTarjeta } from "../pages/Ventas/NewVentaTarjeta/NewVentaTarjeta";
 
 export const Router = () => {
   return (
@@ -21,6 +25,10 @@ export const Router = () => {
         <Route element={<NewSucursal />} path="/negocios/new" />
         <Route element={<EditSucursal />} path="/negocios/edit" />
         <Route element={<Ventas />} path="/ventas" />
+        <Route element={<NewVentaEfectivo />} path="/ventas/efectivo/new" />
+        <Route element={<NewVentaTarjeta />} path="/ventas/tarjeta/new" />
+        <Route element={<AddItem />} path="/ventas/:ventaId/item/new" />
+        <Route element={<EditItem />} path="/ventas/:ventaId/item/:itemId/edit" />
         <Route element={<Clientes />} path="/clientes" />
         <Route element={<NewCliente />} path="/clientes/new" />
         <Route element={<EditCliente />} path="/clientes/edit" />

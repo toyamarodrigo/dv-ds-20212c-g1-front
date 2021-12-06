@@ -27,7 +27,7 @@ import { useGetVentasQuery } from "../../services/api.tiendaropita.ventas";
 import { Venta } from "../../model/venta";
 
 export const Ventas = () => {
-  const [selectedVenta, setSelectedVenta] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [ventas, setVentas] = useState([]);
   const { data, isLoading, isSuccess } = useGetVentasQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -35,17 +35,18 @@ export const Ventas = () => {
   const cancelRef = React.useRef();
 
   const handleExpandVenta = (venta) => {
-    setSelectedVenta(venta);
     setVentas(ventas.map((v) => (v.id === venta.id ? { ...v, isExpanded: !v.isExpanded } : v)));
   };
 
-  const handleDelete = (venta) => {
-    console.log("ahdneldelete");
+  const handleDelete = (item) => {
+    console.log("item :>> ", item);
+    setSelectedItem(item);
+    onOpen();
   };
 
   useEffect(() => {
     if (data) setVentas(data.map((venta) => ({ ...venta, isExpanded: false })));
-  }, []);
+  }, [data]);
 
   console.log(ventas);
 
@@ -62,14 +63,14 @@ export const Ventas = () => {
           <Button
             colorScheme="whatsapp"
             leftIcon={<AddIcon />}
-            onClick={() => navigate("/ventas/efectivo")}
+            onClick={() => navigate("/ventas/efectivo/new")}
           >
             Venta Efectivo 💵
           </Button>
           <Button
             colorScheme="whatsapp"
             leftIcon={<AddIcon />}
-            onClick={() => navigate("/ventas/tarjeta")}
+            onClick={() => navigate("/ventas/tarjeta/new")}
           >
             Venta Tarjeta 💳
           </Button>
@@ -166,13 +167,23 @@ export const Ventas = () => {
                                 colorScheme="yellow"
                                 icon={<EditIcon />}
                                 mr={2}
-                                onClick={() => navigate(`/clientes/edit`, { state: { venta } })}
+                                onClick={() =>
+                                  navigate(`/ventas/${venta.id}/item/${item.id}/edit`, {
+                                    state: { venta, item },
+                                  })
+                                }
                               />
                               <IconButton
                                 aria-label="Edit Negocio"
                                 colorScheme="red"
                                 icon={<FaTrashAlt />}
-                                onClick={() => handleDelete(venta)}
+                                onClick={() => handleDelete(item)}
+                              />
+                              <DeleteModal
+                                cancelRef={cancelRef}
+                                isOpen={isOpen}
+                                item={selectedItem}
+                                onClose={onClose}
                               />
                             </TableCellItem>
                           </React.Fragment>
@@ -207,13 +218,23 @@ export const Ventas = () => {
                                 colorScheme="yellow"
                                 icon={<EditIcon />}
                                 mr={2}
-                                onClick={() => navigate(`/clientes/edit`, { state: { venta } })}
+                                onClick={() =>
+                                  navigate(`/ventas/${venta.id}/item/${item.id}/edit`, {
+                                    state: { venta, item },
+                                  })
+                                }
                               />
                               <IconButton
                                 aria-label="Edit Negocio"
                                 colorScheme="red"
                                 icon={<FaTrashAlt />}
-                                onClick={() => handleDelete(venta)}
+                                onClick={() => handleDelete(item)}
+                              />
+                              <DeleteModal
+                                cancelRef={cancelRef}
+                                isOpen={isOpen}
+                                item={selectedItem}
+                                onClose={onClose}
                               />
                             </TableCellItem>
                           </React.Fragment>
@@ -266,8 +287,8 @@ const TableCellItem = ({ textAlign = "left", children, pl, bgColor }: ITableText
   );
 };
 
-const DeleteModal = ({ isOpen, onClose, cancelRef, cliente }) => {
-  if (!cliente) return null;
+const DeleteModal = ({ isOpen, onClose, cancelRef, item }) => {
+  if (!item) return null;
 
   return (
     <AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
@@ -278,11 +299,11 @@ const DeleteModal = ({ isOpen, onClose, cancelRef, cliente }) => {
           </AlertDialogHeader>
 
           <AlertDialogBody>
-            Esta seguro que desea borrar el cliente{" "}
+            Esta seguro que desea borrar el item{" "}
             <Box as="span" fontWeight={600}>
-              {cliente.nombre} {cliente.apellido}
+              {item.prenda.descripcion}
             </Box>
-            ?
+            de la prenda?
           </AlertDialogBody>
 
           <AlertDialogFooter>

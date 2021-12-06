@@ -9,6 +9,7 @@ export interface Venta {
   importeFinalStr: string;
   cantidadCuotas?: number;
   coeficienteTarjeta?: number;
+  isExpanded?: boolean;
 }
 
 export interface VentaBody {
@@ -30,7 +31,7 @@ interface Cliente {
   razonSocial?: string;
 }
 
-interface Item {
+export interface Item {
   id: number;
   cantidad: number;
   prenda: Prenda;
