@@ -15,9 +15,6 @@ export const BasicLayout = ({ children }) => {
         spacing={10}
         w="100vw"
       >
-        <Text fontFamily="Rubik" fontSize="6xl" fontWeight="bold" position="absolute" top="10%">
-          Tienda Ropita
-        </Text>
         <Stack alignItems="center" justifyContent="center" spacing={6} textAlign="center">
           {children}
         </Stack>

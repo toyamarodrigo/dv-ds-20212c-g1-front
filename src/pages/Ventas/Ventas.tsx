@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Box, Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
 import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@chakra-ui/button";
-import { AddIcon, ChevronDownIcon, ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  ChevronDownIcon,
+  ChevronLeftIcon,
+  ChevronUpIcon,
+  EditIcon,
+} from "@chakra-ui/icons";
 import { FaTrashAlt } from "react-icons/fa";
 import { ResponsiveValue } from "@chakra-ui/styled-system";
 import { useDisclosure } from "@chakra-ui/hooks";
@@ -18,6 +24,7 @@ import { Spinner } from "@chakra-ui/spinner";
 
 import { BasicLayout } from "../../layout";
 import { useGetVentasQuery } from "../../services/api.tiendaropita.ventas";
+import { Venta } from "../../model/venta";
 
 export const Ventas = () => {
   const [selectedVenta, setSelectedVenta] = useState(null);
@@ -29,11 +36,18 @@ export const Ventas = () => {
 
   const handleExpandVenta = (venta) => {
     setSelectedVenta(venta);
+    setVentas(ventas.map((v) => (v.id === venta.id ? { ...v, isExpanded: !v.isExpanded } : v)));
+  };
+
+  const handleDelete = (venta) => {
+    console.log("ahdneldelete");
   };
 
   useEffect(() => {
-    setVentas(data.map((venta) => ({ ...venta, isExpanded: false })));
+    if (data) setVentas(data.map((venta) => ({ ...venta, isExpanded: false })));
   }, []);
+
+  console.log(ventas);
 
   return (
     <BasicLayout>
@@ -78,11 +92,11 @@ export const Ventas = () => {
               <TableHeaderText>IMPORTE</TableHeaderText>
               <TableHeaderText textAlign="center">ACCION</TableHeaderText>
 
-              {ventas.map((venta) => (
+              {ventas.map((venta: Venta) => (
                 <React.Fragment key={venta.id}>
                   <GridItem pt={4}>
                     <Text pl={8} textAlign="left">
-                      {venta.id}
+                      {venta.cantidadCuotas ? `💳 ${venta.id}` : `💵 ${venta.id}`}
                     </Text>
                   </GridItem>
                   <GridItem pt={4}>
@@ -105,71 +119,108 @@ export const Ventas = () => {
                       mr={2}
                       onClick={() => navigate(`/ventas/${venta.id}/item/new`, { state: { venta } })}
                     />
-                    <IconButton
-                      aria-label="Expand Sucursal"
-                      colorScheme="blackAlpha"
-                      icon={<ChevronDownIcon />}
-                      onClick={() => handleExpandVenta(venta)}
-                    />
+                    {venta.items.length > 0 && (
+                      <IconButton
+                        aria-label="Expand Sucursal"
+                        colorScheme="blackAlpha"
+                        icon={!venta.isExpanded ? <ChevronDownIcon /> : <ChevronUpIcon />}
+                        onClick={() => handleExpandVenta(venta)}
+                      />
+                    )}
                   </GridItem>
-
-                  {venta.isExpanded && venta.items.length > 0 ? (
-                    venta.cantidadCuotas && (
-                      <>
-                        <TableHeaderText pl={8}>ID</TableHeaderText>
-                        <TableHeaderText>CANTIDAD</TableHeaderText>
-                        <TableHeaderText>PRENDA</TableHeaderText>
-                        <TableHeaderText>CANT. CUOTAS</TableHeaderText>
-                        <TableHeaderText>IMPORTE</TableHeaderText>
-                        <TableHeaderText textAlign="center">ACCION</TableHeaderText>
-                        <GridItem pt={4}>
-                          <Text>aca estoy</Text>
-                        </GridItem>
-                        <GridItem pt={4}>
-                          <Text>aca estoy</Text>
-                        </GridItem>
-                        <GridItem pt={4}>
-                          <Text>aca estoy</Text>
-                        </GridItem>
-                        <GridItem pt={4}>
-                          <Text>aca estoy</Text>
-                        </GridItem>
-                        <GridItem pt={4}>
-                          <Text>aca estoy</Text>
-                        </GridItem>
-                        <GridItem pt={4}>
-                          <Text>aca estoy</Text>
-                        </GridItem>
-                      </>
-                    )
-                  ) : (
-                    <>
-                      <TableHeaderText pl={8}>ID</TableHeaderText>
-                      <TableHeaderText>CANTIDAD</TableHeaderText>
-                      <TableHeaderText>PRENDA</TableHeaderText>
-                      <TableHeaderText />
-                      <TableHeaderText>IMPORTE</TableHeaderText>
-                      <TableHeaderText textAlign="center">ACCION</TableHeaderText>
-                      <GridItem pt={4}>
-                        <Text>aca estoy</Text>
-                      </GridItem>
-                      <GridItem pt={4}>
-                        <Text>aca estoy</Text>
-                      </GridItem>
-                      <GridItem pt={4}>
-                        <Text>aca estoy</Text>
-                      </GridItem>
-                      <GridItem pt={4}>
-                        <Text>aca estoy</Text>
-                      </GridItem>
-                      <GridItem pt={4}>
-                        <Text>aca estoy</Text>
-                      </GridItem>
-                      <GridItem pt={4}>
-                        <Text>aca estoy</Text>
-                      </GridItem>
-                    </>
-                  )}
+                  {venta.items.map((item, index) => {
+                    if (venta.isExpanded && venta.items.length > 0) {
+                      if (venta.cantidadCuotas) {
+                        return (
+                          <React.Fragment key={item.id}>
+                            {index === 0 && (
+                              <>
+                                <TableHeaderItemText pl={8}>ID</TableHeaderItemText>
+                                <TableHeaderItemText>CANTIDAD</TableHeaderItemText>
+                                <TableHeaderItemText>PRENDA</TableHeaderItemText>
+                                <TableHeaderItemText textAlign="center">
+                                  CANT. CUOTAS
+                                </TableHeaderItemText>
+                                <TableHeaderItemText textAlign="center">
+                                  IMPORTE
+                                </TableHeaderItemText>
+                                <TableHeaderItemText textAlign="center">ACCION</TableHeaderItemText>
+                              </>
+                            )}
+                            <TableCellItem bgColor="blue.50" pl={8}>
+                              {item.id}
+                            </TableCellItem>
+                            <TableCellItem bgColor="blue.50">{item.cantidad}</TableCellItem>
+                            <TableCellItem bgColor="blue.50">
+                              {item.prenda.descripcion}
+                            </TableCellItem>
+                            <TableCellItem bgColor="blue.50" textAlign="center">
+                              {venta.cantidadCuotas}
+                            </TableCellItem>
+                            <TableCellItem bgColor="blue.50" textAlign="center">
+                              {venta.importeFinalStr}
+                            </TableCellItem>
+                            <TableCellItem bgColor="blue.50" textAlign="center">
+                              <IconButton
+                                aria-label="Edit Negocio"
+                                colorScheme="yellow"
+                                icon={<EditIcon />}
+                                mr={2}
+                                onClick={() => navigate(`/clientes/edit`, { state: { venta } })}
+                              />
+                              <IconButton
+                                aria-label="Edit Negocio"
+                                colorScheme="red"
+                                icon={<FaTrashAlt />}
+                                onClick={() => handleDelete(venta)}
+                              />
+                            </TableCellItem>
+                          </React.Fragment>
+                        );
+                      } else {
+                        return (
+                          <React.Fragment key={item.id}>
+                            {index === 0 && (
+                              <>
+                                <TableHeaderItemText pl={8}>ID</TableHeaderItemText>
+                                <TableHeaderItemText>CANTIDAD</TableHeaderItemText>
+                                <TableHeaderItemText>PRENDA</TableHeaderItemText>
+                                <TableHeaderItemText />
+                                <TableHeaderItemText>IMPORTE</TableHeaderItemText>
+                                <TableHeaderItemText textAlign="center">ACCION</TableHeaderItemText>
+                              </>
+                            )}
+                            <TableCellItem bgColor="blue.50" pl={8}>
+                              {item.id}
+                            </TableCellItem>
+                            <TableCellItem bgColor="blue.50" textAlign="center">
+                              {item.cantidad}
+                            </TableCellItem>
+                            <TableCellItem bgColor="blue.50">
+                              {item.prenda.descripcion}
+                            </TableCellItem>
+                            <TableCellItem bgColor="blue.50" />
+                            <TableCellItem bgColor="blue.50">{venta.importeFinalStr}</TableCellItem>
+                            <TableCellItem bgColor="blue.50" textAlign="center">
+                              <IconButton
+                                aria-label="Edit Negocio"
+                                colorScheme="yellow"
+                                icon={<EditIcon />}
+                                mr={2}
+                                onClick={() => navigate(`/clientes/edit`, { state: { venta } })}
+                              />
+                              <IconButton
+                                aria-label="Edit Negocio"
+                                colorScheme="red"
+                                icon={<FaTrashAlt />}
+                                onClick={() => handleDelete(venta)}
+                              />
+                            </TableCellItem>
+                          </React.Fragment>
+                        );
+                      }
+                    }
+                  })}
                 </React.Fragment>
               ))}
             </Grid>
@@ -184,6 +235,7 @@ interface ITableText {
   textAlign?: ResponsiveValue<CanvasTextAlign>;
   pl?: number;
   children?: React.ReactNode;
+  bgColor?: string;
 }
 
 const TableHeaderText = ({ textAlign = "left", children, pl }: ITableText) => {
@@ -192,6 +244,24 @@ const TableHeaderText = ({ textAlign = "left", children, pl }: ITableText) => {
       <Text color="#4A556B" fontSize="12px" fontWeight={700} pl={pl} textAlign={textAlign}>
         {children}
       </Text>
+    </GridItem>
+  );
+};
+
+const TableHeaderItemText = ({ textAlign = "left", children, pl }: ITableText) => {
+  return (
+    <GridItem bgColor="blue.300" mt={4} py={4}>
+      <Text color="#ffffff" fontSize="12px" fontWeight={700} pl={pl} textAlign={textAlign}>
+        {children}
+      </Text>
+    </GridItem>
+  );
+};
+
+const TableCellItem = ({ textAlign = "left", children, pl, bgColor }: ITableText) => {
+  return (
+    <GridItem bgColor={bgColor} pl={pl} py={4}>
+      <Text textAlign={textAlign}>{children}</Text>
     </GridItem>
   );
 };

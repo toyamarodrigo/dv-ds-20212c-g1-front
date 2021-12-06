@@ -9,6 +9,9 @@ import { BasicLayout } from "../../layout";
 export const Home = () => {
   return (
     <BasicLayout>
+      <Text fontFamily="Rubik" fontSize="6xl" fontWeight="bold" position="absolute" top="10%">
+        Tienda Ropita
+      </Text>
       <Grid gap={6} templateColumns={{ sm: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}>
         <EntityContainer bgColor="blue.100" color="black" title="Negocios" to="/negocios" />
         <EntityContainer bgColor="blue.100" color="black" title="Ventas" to="/ventas" />
