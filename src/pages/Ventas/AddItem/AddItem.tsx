@@ -50,10 +50,12 @@ export const AddItem = () => {
       >
         <Stack spacing={4} w="60%">
           <FormControl>
-            <FormLabel fontWeight={600}>ID Venta: {ventaId}</FormLabel>
+            {/* // TODO: InputAutocomplete Venta */}
+            <FormLabel fontWeight={600}>Venta: {ventaId}</FormLabel>
           </FormControl>
           <FormControl>
-            <FormLabel fontWeight={600}>ID Prenda</FormLabel>
+            {/* // TODO: InputAutocomplete Prenda */}
+            <FormLabel fontWeight={600}>Prenda</FormLabel>
             <Input placeholder="4..." type="number" />
           </FormControl>
           <FormControl>
