@@ -20,9 +20,6 @@ export const AddItem = () => {
   const { state } = useLocation();
   const { ventaId } = useParams();
 
-  console.log("state :>> ", state);
-  console.log("ventaId :>> ", ventaId);
-
   const handleSubmit = () => {
     console.log("HandleSUbmit");
   };
@@ -30,7 +27,11 @@ export const AddItem = () => {
   return (
     <BasicLayout>
       <Stack alignItems="center" direction="row" w="100%">
-        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
+        <IconButton
+          aria-label="Go back"
+          icon={<ChevronLeftIcon />}
+          onClick={() => navigate("/ventas")}
+        />
         <Text fontSize="xl" fontWeight={600}>
           Agregar Item a Venta
         </Text>
@@ -70,7 +71,7 @@ export const AddItem = () => {
           <Button colorScheme="whatsapp" leftIcon={<AddIcon />} onClick={() => handleSubmit()}>
             Agregar
           </Button>
-          <Button variant="filled" onClick={() => navigate(-1)}>
+          <Button variant="filled" onClick={() => navigate("/ventas")}>
             Cancelar
           </Button>
         </Stack>

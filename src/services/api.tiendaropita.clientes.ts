@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import axios from "axios";
 
 import { Cliente, ClientePageable } from "../model/cliente";
 
@@ -50,6 +51,26 @@ export const clientesApi = createApi({
     }),
   }),
 });
+
+export const getClientsByQuery = async ({ query }: any): Promise<Cliente[]> => {
+  return await axios
+    .get(`${import.meta.env.VITE_APP_BASE_URL_API}/clientes/all`)
+    .then((response) => {
+      const clientes = response.data
+        .filter((cliente) => {
+          return cliente.razonSocial.toLowerCase().includes(query.toLowerCase());
+        })
+        .map((cliente: any) => {
+          return {
+            value: cliente.id,
+            label: cliente.razonSocial,
+          };
+        })
+        .slice(0, 4);
+
+      return clientes;
+    });
+};
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints

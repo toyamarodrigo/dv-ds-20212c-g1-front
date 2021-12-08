@@ -20,7 +20,7 @@ export const Negocios = () => {
   return (
     <BasicLayout>
       <Stack alignItems="center" direction="row" w="800px">
-        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
+        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate("/")} />
         <Text fontSize="xl" fontWeight={600}>
           Negocios
         </Text>

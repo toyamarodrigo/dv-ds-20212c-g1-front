@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
 import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@chakra-ui/button";
@@ -15,34 +15,35 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/modal";
 import { Spinner } from "@chakra-ui/spinner";
+import { useToast } from "@chakra-ui/toast";
 
 import { BasicLayout } from "../../layout";
-import { useGetPrendasQuery } from "../../services/api.tiendaropita.prendas";
+import {
+  useDeletePrendaMutation,
+  useGetPrendasQuery,
+} from "../../services/api.tiendaropita.prendas";
 import { Prenda } from "../../model/prenda";
 
 export const Prendas = () => {
   const [selectedPrenda, setSelectedPrenda] = useState(null);
-  const { data, isLoading, isSuccess } = useGetPrendasQuery();
+  const { data, isLoading, isSuccess, refetch } = useGetPrendasQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const cancelRef = React.useRef();
 
-  const handleDelete = (prenda: Prenda) => {
+  const handleOpenDialog = (prenda: Prenda) => {
     setSelectedPrenda(prenda);
     onOpen();
   };
 
-  // if (isLoading)
-  //   return (
-  //     <BasicLayout>
-  //       <Spinner size="lg" />
-  //     </BasicLayout>
-  //   );
+  useEffect(() => {
+    refetch();
+  }, [refetch, selectedPrenda]);
 
   return (
     <BasicLayout>
       <Stack alignItems="center" direction="row" w="800px">
-        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
+        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate("/")} />
         <Text fontSize="xl" fontWeight={600}>
           Prendas
         </Text>
@@ -102,7 +103,7 @@ export const Prendas = () => {
                       aria-label="Edit Negocio"
                       colorScheme="red"
                       icon={<FaTrashAlt />}
-                      onClick={() => handleDelete(prenda)}
+                      onClick={() => handleOpenDialog(prenda)}
                     />
                   </GridItem>
                 </React.Fragment>
@@ -111,6 +112,7 @@ export const Prendas = () => {
                 cancelRef={cancelRef}
                 isOpen={isOpen}
                 prenda={selectedPrenda}
+                setPrenda={setSelectedPrenda}
                 onClose={onClose}
               />
             </Grid>
@@ -137,7 +139,38 @@ const TableHeaderText = ({ textAlign = "left", children, pl }: ITableText) => {
   );
 };
 
-const DeleteModal = ({ isOpen, onClose, cancelRef, prenda }) => {
+const DeleteModal = ({ isOpen, onClose, cancelRef, prenda, setPrenda }) => {
+  const [deletePrenda] = useDeletePrendaMutation();
+  const toast = useToast();
+
+  const handleDelete = async () => {
+    try {
+      await deletePrenda(prenda.id)
+        .unwrap()
+        .then(() => {
+          setPrenda(null);
+          toast({
+            title: "Cliente borrado",
+            description: "El cliente ha sido borrado correctamente",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+          });
+          onClose();
+        });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Hubo un error al borrar el cliente",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
   if (!prenda) return null;
 
   return (
@@ -160,7 +193,7 @@ const DeleteModal = ({ isOpen, onClose, cancelRef, prenda }) => {
             <Button ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="red" ml={3} onClick={onClose}>
+            <Button colorScheme="red" ml={3} onClick={handleDelete}>
               Delete
             </Button>
           </AlertDialogFooter>

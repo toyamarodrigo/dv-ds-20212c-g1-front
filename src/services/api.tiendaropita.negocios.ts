@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import axios from "axios";
 
 import { Negocio, NegocioPageable, Negocios } from "../model/negocio";
 
@@ -38,6 +39,26 @@ export const negociosApi = createApi({
     }),
   }),
 });
+
+export const getNegociosByQuery = async ({ query }: any): Promise<Negocio[]> => {
+  return await axios
+    .get(`${import.meta.env.VITE_APP_BASE_URL_API}/negocio/all`)
+    .then((response) => {
+      const negocios = response.data
+        .filter((negocio) => {
+          return negocio.sucursal.toLowerCase().includes(query.toLowerCase());
+        })
+        .map((negocio: any) => {
+          return {
+            value: negocio.id,
+            label: negocio.sucursal,
+          };
+        })
+        .slice(0, 4);
+
+      return negocios;
+    });
+};
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints

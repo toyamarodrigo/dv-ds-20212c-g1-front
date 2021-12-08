@@ -21,7 +21,11 @@ export const prendasApi = createApi({
         return {
           url: `/prendas`,
           method: "POST",
-          body,
+          body: {
+            descripcion: body.descripcion,
+            tipo: body.tipo,
+            precioBase: body.precioBase,
+          },
         };
       },
     }),

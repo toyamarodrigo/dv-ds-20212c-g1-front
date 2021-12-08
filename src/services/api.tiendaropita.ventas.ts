@@ -38,6 +38,7 @@ export const ventasApi = createApi({
           body: {
             clienteId: body.clienteId,
             sucursalId: body.sucursalId,
+            cantidadCuotas: body.cantidadCuotas,
           },
         };
       },

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button, IconButton } from "@chakra-ui/button";
 import { ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
 import { Stack, Text } from "@chakra-ui/layout";
@@ -6,22 +6,68 @@ import { useLocation, useNavigate } from "react-router";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
 import { Select } from "@chakra-ui/select";
+import { useToast } from "@chakra-ui/toast";
 
 import { BasicLayout } from "../../../layout";
 import { TiposPrenda } from "../utils";
+import { useUpdatePrendaMutation } from "../../../services/api.tiendaropita.prendas";
 
 export const EditPrenda = () => {
+  const initialValue = { descripcion: "", tipo: "", precioBase: "" };
+  const [prenda, setPrenda] = useState(initialValue);
   const navigate = useNavigate();
+  const [updatePrenda] = useUpdatePrendaMutation();
   const { state } = useLocation();
+  const toast = useToast();
 
-  const handleSubmit = () => {
-    console.log("HandleSUbmit");
+  const handleSubmit = async () => {
+    try {
+      await updatePrenda(prenda)
+        .unwrap()
+        .then(() => {
+          setPrenda(initialValue);
+          toast({
+            title: "Prenda modificada",
+            description: "La prenda ha sido modificada correctamente",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+          });
+          navigate("/prendas");
+        });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Hubo un error al modificar la prenda",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
   };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPrenda({ ...prenda, [e.target.name]: e.target.value });
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPrenda({ ...prenda, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    setPrenda({ ...state.prenda });
+  }, [state]);
 
   return (
     <BasicLayout>
       <Stack alignItems="center" direction="row" w="100%">
-        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
+        <IconButton
+          aria-label="Go back"
+          icon={<ChevronLeftIcon />}
+          onClick={() => navigate("/prendas")}
+        />
         <Text fontSize="xl" fontWeight={600}>
           Modificar Prenda
         </Text>
@@ -44,15 +90,34 @@ export const EditPrenda = () => {
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Nombre nuevo de Prenda</FormLabel>
-            <Input placeholder={state.prenda.descripcion} />
+            <Input
+              isRequired
+              name="descripcion"
+              placeholder={state.prenda.descripcion}
+              value={prenda.descripcion}
+              onChange={handleInputChange}
+            />
           </FormControl>
           <FormControl>
-            <FormLabel fontWeight={600}>Precio nuevo de Cliente</FormLabel>
-            <Input placeholder={state.prenda.precioBase} />
+            <FormLabel fontWeight={600}>Precio nuevo de Prenda</FormLabel>
+            <Input
+              isRequired
+              name="precioBase"
+              placeholder={state.prenda.precioBase}
+              value={prenda.precioBase}
+              onChange={handleInputChange}
+            />
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Tipo nuevo de Prenda</FormLabel>
-            <Select isRequired defaultValue={state.prenda.tipo} type="number">
+            <Select
+              isRequired
+              name="tipo"
+              placeholder="Seleccionar tipo de prenda"
+              type="text"
+              value={prenda.tipo}
+              onChange={handleSelectChange}
+            >
               {TiposPrenda.map((tipo, index) => (
                 <option key={index} value={tipo.value}>
                   {tipo.label}
@@ -65,7 +130,7 @@ export const EditPrenda = () => {
           <Button colorScheme="whatsapp" leftIcon={<EditIcon />} onClick={() => handleSubmit()}>
             Modificar
           </Button>
-          <Button variant="filled" onClick={() => navigate(-1)}>
+          <Button variant="filled" onClick={() => navigate("/prendas")}>
             Cancelar
           </Button>
         </Stack>

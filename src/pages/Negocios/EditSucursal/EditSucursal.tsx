@@ -56,7 +56,11 @@ export const EditSucursal = () => {
   return (
     <BasicLayout>
       <Stack alignItems="center" direction="row" w="100%">
-        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
+        <IconButton
+          aria-label="Go back"
+          icon={<ChevronLeftIcon />}
+          onClick={() => navigate("/negocios")}
+        />
         <Text fontSize="xl" fontWeight={600}>
           Modificar Negocio
         </Text>
@@ -90,7 +94,7 @@ export const EditSucursal = () => {
           <Button colorScheme="whatsapp" leftIcon={<EditIcon />} onClick={() => handleSubmit()}>
             Modificar
           </Button>
-          <Button variant="filled" onClick={() => navigate(-1)}>
+          <Button variant="filled" onClick={() => navigate("/negocios")}>
             Cancelar
           </Button>
         </Stack>

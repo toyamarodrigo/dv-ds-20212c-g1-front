@@ -30,7 +30,11 @@ export const EditItem = () => {
   return (
     <BasicLayout>
       <Stack alignItems="center" direction="row" w="100%">
-        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
+        <IconButton
+          aria-label="Go back"
+          icon={<ChevronLeftIcon />}
+          onClick={() => navigate("/ventas")}
+        />
         <Text fontSize="xl" fontWeight={600}>
           Modificar Item de Venta
         </Text>
@@ -69,7 +73,7 @@ export const EditItem = () => {
           <Button colorScheme="whatsapp" leftIcon={<AddIcon />} onClick={() => handleSubmit()}>
             Modificar
           </Button>
-          <Button variant="filled" onClick={() => navigate(-1)}>
+          <Button variant="filled" onClick={() => navigate("/ventas")}>
             Cancelar
           </Button>
         </Stack>

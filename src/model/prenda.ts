@@ -1,9 +1,9 @@
 export interface Prenda {
-  id: number;
+  id?: number;
   descripcion: string;
   tipo: null | string;
-  precioBase: number;
-  precioFinal?: number;
+  precioBase: string;
+  precioFinal?: string;
 }
 
 export interface PrendaPageable {

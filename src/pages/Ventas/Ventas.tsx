@@ -29,7 +29,7 @@ import { Venta } from "../../model/venta";
 export const Ventas = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [ventas, setVentas] = useState([]);
-  const { data, isLoading, isSuccess } = useGetVentasQuery();
+  const { data, isLoading, isSuccess, refetch } = useGetVentasQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const cancelRef = React.useRef();
@@ -44,13 +44,14 @@ export const Ventas = () => {
   };
 
   useEffect(() => {
+    refetch();
     if (data) setVentas(data.map((venta) => ({ ...venta, isExpanded: false })));
-  }, [data]);
+  }, [data, refetch]);
 
   return (
     <BasicLayout>
       <Stack alignItems="center" direction="row" h="100%" w="800px">
-        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate(-1)} />
+        <IconButton aria-label="Go back" icon={<ChevronLeftIcon />} onClick={() => navigate("/")} />
         <Text fontSize="xl" fontWeight={600}>
           Ventas
         </Text>

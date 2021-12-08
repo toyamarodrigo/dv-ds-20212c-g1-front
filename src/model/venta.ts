@@ -13,8 +13,9 @@ export interface Venta {
 }
 
 export interface VentaBody {
-  clienteId: number;
-  sucursalId: number;
+  clienteId: string;
+  sucursalId: string;
+  cantidadCuotas?: string;
 }
 
 export interface ItemBody {
