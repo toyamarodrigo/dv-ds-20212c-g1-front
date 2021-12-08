@@ -1,19 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, IconButton } from "@chakra-ui/button";
 import { ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
 import { Stack, Text } from "@chakra-ui/layout";
 import { useLocation, useNavigate } from "react-router";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
+import { useToast } from "@chakra-ui/toast";
 
 import { BasicLayout } from "../../../layout";
+import { useUpdateClienteMutation } from "../../../services/api.tiendaropita.clientes";
 
 export const EditCliente = () => {
+  const [updateCliente] = useUpdateClienteMutation();
+  const initialValue = { nombre: "", apellido: "" };
+  const [cliente, setCliente] = useState(initialValue);
   const navigate = useNavigate();
+  const toast = useToast();
   const { state } = useLocation();
 
-  const handleSubmit = () => {
-    console.log("HandleSUbmit");
+  const handleSubmit = async () => {
+    try {
+      await updateCliente({
+        id: state.cliente.id,
+        nombre: cliente.nombre,
+        apellido: cliente.apellido,
+      })
+        .unwrap()
+        .then(() => {
+          setCliente(initialValue);
+          toast({
+            title: "Cliente modificado",
+            description: "El cliente ha sido modificado correctamente",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+          });
+          navigate("/clientes");
+        });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Hubo un error al modificar el cliente",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const handleInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setCliente((prev) => ({
+      ...prev,
+      [target.name]: target.value,
+    }));
   };
 
   return (
@@ -28,7 +69,7 @@ export const EditCliente = () => {
         alignItems="center"
         as="form"
         direction="column"
-        h="300px"
+        h="450px"
         justifyContent="center"
         px={4}
         py={8}
@@ -38,15 +79,19 @@ export const EditCliente = () => {
       >
         <Stack spacing={4} w="60%">
           <FormControl>
-            <FormLabel fontWeight={600}>ID Sucursal: {state.cliente.id}</FormLabel>
+            <FormLabel fontWeight={600}>ID Cliente: {state.cliente.id}</FormLabel>
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Nombre nuevo de Cliente</FormLabel>
-            <Input placeholder={state.cliente.nombre} />
+            <Input name="nombre" placeholder={state.cliente.nombre} onChange={handleInputChange} />
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Apellido nuevo de Cliente</FormLabel>
-            <Input placeholder={state.cliente.apellido} />
+            <Input
+              name="apellido"
+              placeholder={state.cliente.apellido}
+              onChange={handleInputChange}
+            />
           </FormControl>
         </Stack>
         <Stack direction="row" justifyContent="flex-start" spacing={4} w="60%">

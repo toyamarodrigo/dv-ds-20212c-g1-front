@@ -12,24 +12,27 @@ import { useAddNegocioMutation } from "../../../services/api.tiendaropita.negoci
 
 export const NewSucursal = () => {
   const navigate = useNavigate();
-  const [addNegocio, { isLoading }] = useAddNegocioMutation();
+  const [addNegocio] = useAddNegocioMutation();
   const initialValue = { sucursal: "" };
   const [sucursal, setSucursal] = useState(initialValue);
   const toast = useToast();
 
   const handleSubmit = async () => {
     try {
-      await addNegocio(sucursal).unwrap();
-      setSucursal(initialValue);
-      toast({
-        title: "Sucursal agregada",
-        description: "La sucursal ha sido agregada correctamente",
-        status: "success",
-        duration: 5000,
-        isClosable: true,
-        position: "top",
-      });
-      navigate("/negocios");
+      await addNegocio(sucursal)
+        .unwrap()
+        .then(() => {
+          setSucursal(initialValue);
+          toast({
+            title: "Sucursal agregada",
+            description: "La sucursal ha sido agregada correctamente",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+          });
+          navigate("/negocios");
+        });
     } catch {
       toast({
         title: "Error",

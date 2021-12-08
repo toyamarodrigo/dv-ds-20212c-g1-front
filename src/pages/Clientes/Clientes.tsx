@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
 import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@chakra-ui/button";
@@ -15,29 +15,30 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/modal";
 import { Spinner } from "@chakra-ui/spinner";
+import { useToast } from "@chakra-ui/toast";
 
 import { BasicLayout } from "../../layout";
-import { useGetClientesQuery } from "../../services/api.tiendaropita.clientes";
+import {
+  useDeleteClienteMutation,
+  useGetClientesQuery,
+} from "../../services/api.tiendaropita.clientes";
 import { Cliente } from "../../model/cliente";
 
 export const Clientes = () => {
   const [selectedCliente, setSelectedCliente] = useState(null);
-  const { data, isLoading, isSuccess } = useGetClientesQuery();
+  const { data, isLoading, isSuccess, refetch } = useGetClientesQuery();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const cancelRef = React.useRef();
 
-  const handleDelete = (cliente: Cliente) => {
+  const handleOpenDialog = (cliente: Cliente) => {
     setSelectedCliente(cliente);
     onOpen();
   };
 
-  // if (isLoading)
-  //   return (
-  //     <BasicLayout>
-  //       <Spinner size="lg" />
-  //     </BasicLayout>
-  //   );
+  useEffect(() => {
+    refetch();
+  }, [refetch, selectedCliente]);
 
   return (
     <BasicLayout>
@@ -98,7 +99,7 @@ export const Clientes = () => {
                       aria-label="Edit Negocio"
                       colorScheme="red"
                       icon={<FaTrashAlt />}
-                      onClick={() => handleDelete(cliente)}
+                      onClick={() => handleOpenDialog(cliente)}
                     />
                   </GridItem>
                 </React.Fragment>
@@ -107,6 +108,7 @@ export const Clientes = () => {
                 cancelRef={cancelRef}
                 cliente={selectedCliente}
                 isOpen={isOpen}
+                setCliente={setSelectedCliente}
                 onClose={onClose}
               />
             </Grid>
@@ -133,8 +135,39 @@ const TableHeaderText = ({ textAlign = "left", children, pl }: ITableText) => {
   );
 };
 
-const DeleteModal = ({ isOpen, onClose, cancelRef, cliente }) => {
+const DeleteModal = ({ isOpen, onClose, cancelRef, cliente, setCliente }) => {
+  const [deleteCliente] = useDeleteClienteMutation();
+  const toast = useToast();
+
   if (!cliente) return null;
+
+  const handleDelete = async () => {
+    try {
+      await deleteCliente(cliente.id)
+        .unwrap()
+        .then(() => {
+          setCliente(null);
+          toast({
+            title: "Cliente borrado",
+            description: "El cliente ha sido borrado correctamente",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+          });
+          onClose();
+        });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Hubo un error al borrar el cliente",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
 
   return (
     <AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
@@ -156,7 +189,7 @@ const DeleteModal = ({ isOpen, onClose, cancelRef, cliente }) => {
             <Button ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="red" ml={3} onClick={onClose}>
+            <Button colorScheme="red" ml={3} onClick={handleDelete}>
               Delete
             </Button>
           </AlertDialogFooter>
