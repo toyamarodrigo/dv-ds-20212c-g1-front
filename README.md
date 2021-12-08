@@ -20,4 +20,4 @@ npm run dev
 
 ### mock
 
-![https://www.figma.com/file/N3kZOQj5ajZSfHR0A6uqM7/Tienda-Ropita](https://www.figma.com/file/N3kZOQj5ajZSfHR0A6uqM7/Tienda-Ropita)
+<https://www.figma.com/file/N3kZOQj5ajZSfHR0A6uqM7/Tienda-Ropita](https://www.figma.com/file/N3kZOQj5ajZSfHR0A6uqM7/Tienda-Ropita>
