@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import axios from "axios";
 
 import { Prenda, PrendaPageable } from "../model/prenda";
 
@@ -52,6 +53,26 @@ export const prendasApi = createApi({
     }),
   }),
 });
+
+export const getPrendasByQuery = async ({ query }: any): Promise<Prenda[]> => {
+  return await axios
+    .get(`${import.meta.env.VITE_APP_BASE_URL_API}/prendas/all`)
+    .then((response) => {
+      const prendas = response.data
+        .filter((prenda) => {
+          return prenda.descripcion.toLowerCase().includes(query.toLowerCase());
+        })
+        .map((prenda: any) => {
+          return {
+            value: prenda.id,
+            label: prenda.descripcion,
+          };
+        })
+        .slice(0, 4);
+
+      return prendas;
+    });
+};
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints

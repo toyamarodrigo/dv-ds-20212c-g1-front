@@ -21,9 +21,13 @@ import {
   AlertDialogOverlay,
 } from "@chakra-ui/modal";
 import { Spinner } from "@chakra-ui/spinner";
+import { useToast } from "@chakra-ui/toast";
 
 import { BasicLayout } from "../../layout";
-import { useGetVentasQuery } from "../../services/api.tiendaropita.ventas";
+import {
+  useDeleteItemFromVentaMutation,
+  useGetVentasQuery,
+} from "../../services/api.tiendaropita.ventas";
 import { Venta } from "../../model/venta";
 
 export const Ventas = () => {
@@ -38,7 +42,7 @@ export const Ventas = () => {
     setVentas(ventas.map((v) => (v.id === venta.id ? { ...v, isExpanded: !v.isExpanded } : v)));
   };
 
-  const handleDelete = (item) => {
+  const handleOpenDialog = (item) => {
     setSelectedItem(item);
     onOpen();
   };
@@ -88,7 +92,7 @@ export const Ventas = () => {
               <TableHeaderText>FECHA</TableHeaderText>
               <TableHeaderText>SUCURSAL</TableHeaderText>
               <TableHeaderText>CLIENTE</TableHeaderText>
-              <TableHeaderText>IMPORTE</TableHeaderText>
+              <TableHeaderText>IMPORTE FINAL</TableHeaderText>
               <TableHeaderText textAlign="center">ACCION</TableHeaderText>
 
               {ventas.map((venta: Venta) => (
@@ -158,7 +162,7 @@ export const Ventas = () => {
                               {venta.cantidadCuotas}
                             </TableCellItem>
                             <TableCellItem bgColor="blue.50" textAlign="center">
-                              {venta.importeFinalStr}
+                              {item.prenda.precioBase}
                             </TableCellItem>
                             <TableCellItem bgColor="blue.50" textAlign="center">
                               <IconButton
@@ -176,12 +180,14 @@ export const Ventas = () => {
                                 aria-label="Edit Negocio"
                                 colorScheme="red"
                                 icon={<FaTrashAlt />}
-                                onClick={() => handleDelete(item)}
+                                onClick={() => handleOpenDialog(item)}
                               />
                               <DeleteModal
                                 cancelRef={cancelRef}
                                 isOpen={isOpen}
                                 item={selectedItem}
+                                setItem={setSelectedItem}
+                                venta={venta}
                                 onClose={onClose}
                               />
                             </TableCellItem>
@@ -210,7 +216,9 @@ export const Ventas = () => {
                               {item.prenda.descripcion}
                             </TableCellItem>
                             <TableCellItem bgColor="blue.50" />
-                            <TableCellItem bgColor="blue.50">{venta.importeFinalStr}</TableCellItem>
+                            <TableCellItem bgColor="blue.50">
+                              {item.prenda.precioBase}
+                            </TableCellItem>
                             <TableCellItem bgColor="blue.50" textAlign="center">
                               <IconButton
                                 aria-label="Edit Negocio"
@@ -227,12 +235,14 @@ export const Ventas = () => {
                                 aria-label="Edit Negocio"
                                 colorScheme="red"
                                 icon={<FaTrashAlt />}
-                                onClick={() => handleDelete(item)}
+                                onClick={() => handleOpenDialog(item)}
                               />
                               <DeleteModal
                                 cancelRef={cancelRef}
                                 isOpen={isOpen}
                                 item={selectedItem}
+                                setItem={setSelectedItem}
+                                venta={venta}
                                 onClose={onClose}
                               />
                             </TableCellItem>
@@ -288,35 +298,69 @@ const TableCellItem = ({ textAlign = "left", children, pl, bgColor }: ITableText
   );
 };
 
-const DeleteModal = ({ isOpen, onClose, cancelRef, item }) => {
-  if (!item) return null;
+const DeleteModal = ({ isOpen, onClose, cancelRef, item, setItem, venta }) => {
+  const [deleteItemOfVenta] = useDeleteItemFromVentaMutation();
+  const { refetch } = useGetVentasQuery();
+
+  const toast = useToast();
+
+  const handleDeleteItem = async () => {
+    try {
+      await deleteItemOfVenta({ ventaId: venta.id, itemId: item.id })
+        .unwrap()
+        .then(() => {
+          toast({
+            title: "Item borrado",
+            description: "El item ha sido borrado correctamente",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+          });
+          refetch();
+          setItem(null);
+          onClose();
+        });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Hubo un error al borrar el item",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
 
   return (
-    <AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-      <AlertDialogOverlay>
-        <AlertDialogContent>
-          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            Borrar Cliente
-          </AlertDialogHeader>
+    <>
+      <AlertDialog isCentered isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Borrar Item
+            </AlertDialogHeader>
 
-          <AlertDialogBody>
-            Esta seguro que desea borrar el item{" "}
-            <Box as="span" fontWeight={600}>
-              {item.prenda.descripcion}
-            </Box>
-            de la prenda?
-          </AlertDialogBody>
+            <AlertDialogBody>
+              Esta seguro que desea borrar el item{" "}
+              <Box as="span" fontWeight={600}>
+                {item?.prenda.descripcion}
+              </Box>{" "}
+              de la venta?
+            </AlertDialogBody>
 
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button colorScheme="red" ml={3} onClick={onClose}>
-              Delete
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialogOverlay>
-    </AlertDialog>
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={() => onClose()}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" ml={3} onClick={() => handleDeleteItem()}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   );
 };

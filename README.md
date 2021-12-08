@@ -2,6 +2,15 @@
 
 Correr Local
 
+Crear archivo `.env.development.local` al nivel de carpeta `src` para variables de entorno
+
+```shell
+VITE_APP_BASE_URL_API=http://localhost:8090/tienda/api
+VITE_APP_BASE_URL=http://localhost:3000/
+```
+
+Ejecutar comandos en consola
+
 ```shell
 git clone https://github.com/toyamarodrigo/dv-ds-20212c-g1-front.git
 

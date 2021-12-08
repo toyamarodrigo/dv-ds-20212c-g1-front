@@ -51,7 +51,7 @@ export const Negocios = () => {
               <TableHeaderText>VENTAS TOTALES</TableHeaderText>
               <TableHeaderText textAlign="center">ACCION</TableHeaderText>
 
-              {data.content.map((negocio) => (
+              {data?.content.map((negocio) => (
                 <React.Fragment key={negocio.id}>
                   <GridItem pt={4}>
                     <Text pl={8} textAlign="left">

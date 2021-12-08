@@ -66,10 +66,10 @@ export const ventasApi = createApi({
         };
       },
     }),
-    deleteItemFromVenta: builder.mutation<Venta, void>({
-      query(id) {
+    deleteItemFromVenta: builder.mutation<Venta, { ventaId: string; itemId: string }>({
+      query(body) {
         return {
-          url: `/ventas/${id}`,
+          url: `/ventas/${body.ventaId}/items/${body.itemId}`,
           method: "DELETE",
         };
       },

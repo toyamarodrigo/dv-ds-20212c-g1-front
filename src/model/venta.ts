@@ -19,10 +19,10 @@ export interface VentaBody {
 }
 
 export interface ItemBody {
-  itemId?: number;
-  ventaId?: number;
-  cantidad: number;
-  prendaId: number;
+  itemId?: string;
+  ventaId?: string;
+  cantidad: string;
+  prendaId: string;
 }
 
 interface Cliente {
