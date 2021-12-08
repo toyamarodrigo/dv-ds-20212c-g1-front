@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
 import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@chakra-ui/button";
@@ -11,14 +11,11 @@ import { useGetNegociosPageableQuery } from "../../services/api.tiendaropita.neg
 
 export const Negocios = () => {
   const navigate = useNavigate();
-  const { data, isLoading, isSuccess } = useGetNegociosPageableQuery();
+  const { data, isLoading, isSuccess, refetch } = useGetNegociosPageableQuery();
 
-  // if (isLoading)
-  //   return (
-  //     <BasicLayout>
-  //       <Spinner size="lg" />
-  //     </BasicLayout>
-  //   );
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   return (
     <BasicLayout>
@@ -100,11 +97,3 @@ const TableHeaderText = ({ textAlign = "left", children, pl }: ITableText) => {
     </GridItem>
   );
 };
-
-// const TableText = ({ textAlign, color, fontWeight, children, pl }: ITableText) => {
-//   return (
-//     <Text color={color} fontSize="12px" fontWeight={fontWeight} pl={pl} textAlign={textAlign}>
-//       {children}
-//     </Text>
-//   );
-// };

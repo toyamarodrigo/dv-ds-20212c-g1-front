@@ -1,19 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, IconButton } from "@chakra-ui/button";
 import { ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
 import { Stack, Text } from "@chakra-ui/layout";
 import { useLocation, useNavigate } from "react-router";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input } from "@chakra-ui/input";
+import { useToast } from "@chakra-ui/toast";
 
 import { BasicLayout } from "../../../layout";
+import { useUpdateNegocioMutation } from "../../../services/api.tiendaropita.negocios";
 
 export const EditSucursal = () => {
+  const [updateNegocio] = useUpdateNegocioMutation();
+  const initialValue = { sucursal: "" };
+  const [sucursal, setSucursal] = useState(initialValue);
+  const toast = useToast();
   const navigate = useNavigate();
   const { state } = useLocation();
 
-  const handleSubmit = () => {
-    console.log("HandleSUbmit");
+  const handleSubmit = async () => {
+    try {
+      await updateNegocio({ id: state.negocio.id, sucursal: sucursal.sucursal })
+        .unwrap()
+        .then(() => {
+          setSucursal(initialValue);
+          toast({
+            title: "Sucursal modificada",
+            description: "La sucursal ha sido modificada correctamente",
+            status: "success",
+            duration: 5000,
+            isClosable: true,
+            position: "top",
+          });
+          navigate("/negocios");
+        });
+    } catch {
+      toast({
+        title: "Error",
+        description: "Hubo un error al modificar la sucursal",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  };
+
+  const handleInputChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    setSucursal((prev) => ({
+      ...prev,
+      [target.name]: target.value,
+    }));
   };
 
   return (
@@ -42,7 +79,11 @@ export const EditSucursal = () => {
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Nombre nuevo de Sucursal</FormLabel>
-            <Input placeholder={state.negocio.sucursal} />
+            <Input
+              name="sucursal"
+              placeholder={state.negocio.sucursal}
+              onChange={handleInputChange}
+            />
           </FormControl>
         </Stack>
         <Stack direction="row" justifyContent="flex-start" spacing={4} w="60%">
