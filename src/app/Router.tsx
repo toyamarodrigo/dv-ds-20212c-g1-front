@@ -7,6 +7,7 @@ import { EditCliente } from "../pages/Clientes/EditCliente/EditCliente";
 import { NewCliente } from "../pages/Clientes/NewCliente/NewCliente";
 import { EditSucursal } from "../pages/Negocios/EditSucursal/EditSucursal";
 import { NewSucursal } from "../pages/Negocios/NewSucursal/NewSucursal";
+import { SalesSucursal } from "../pages/Negocios/SalesSucursal/SalesSucursal";
 import { Prendas } from "../pages/Prendas";
 import { EditPrenda } from "../pages/Prendas/EditPrenda/EditPrenda";
 import { NewPrenda } from "../pages/Prendas/NewPrenda/NewPrenda";
@@ -24,6 +25,7 @@ export const Router = () => {
         <Route element={<Negocios />} path="/negocios" />
         <Route element={<NewSucursal />} path="/negocios/new" />
         <Route element={<EditSucursal />} path="/negocios/edit" />
+        <Route element={<SalesSucursal />} path="/negocios/sales" />
         <Route element={<Ventas />} path="/ventas" />
         <Route element={<NewVentaEfectivo />} path="/ventas/efectivo/new" />
         <Route element={<NewVentaTarjeta />} path="/ventas/tarjeta/new" />

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Grid, GridItem, Stack, Text } from "@chakra-ui/layout";
 import { useNavigate } from "react-router-dom";
 import { Button, IconButton } from "@chakra-ui/button";
-import { AddIcon, ChevronLeftIcon, EditIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronLeftIcon, EditIcon, SearchIcon } from "@chakra-ui/icons";
 import { ResponsiveValue } from "@chakra-ui/styled-system";
 import { Spinner } from "@chakra-ui/spinner";
 
@@ -33,6 +33,13 @@ export const Negocios = () => {
             onClick={() => navigate("/negocios/new")}
           >
             Agregar Sucursal
+          </Button>
+          <Button
+            colorScheme="whatsapp"
+            leftIcon={<SearchIcon />}
+            onClick={() => navigate("/negocios/sales")}
+          >
+            Ver Ventas por fecha
           </Button>
         </Stack>
         <Stack alignItems="center">

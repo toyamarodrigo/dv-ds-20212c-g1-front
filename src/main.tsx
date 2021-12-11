@@ -6,6 +6,8 @@ import { Provider } from "react-redux";
 import App from "./app/App";
 import { store } from "./app/store";
 
+import "react-datepicker/dist/react-datepicker.css";
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

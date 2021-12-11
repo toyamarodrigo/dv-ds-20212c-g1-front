@@ -17,6 +17,9 @@ export const negociosApi = createApi({
     getNegocio: builder.query<Negocio, string>({
       query: (id) => `/negocio/${id}`,
     }),
+    getNegocioVentasByFecha: builder.query<Negocio[], { id: string; fecha: string }>({
+      query: (sucursal) => `/negocio/${sucursal.id}/total?fecha=${sucursal.fecha}`,
+    }),
     addNegocio: builder.mutation<Negocio, Partial<Negocio>>({
       query(body) {
         return {
@@ -66,6 +69,7 @@ export const {
   useGetNegociosPageableQuery,
   useGetNegociosQuery,
   useGetNegocioQuery,
+  useGetNegocioVentasByFechaQuery,
   useAddNegocioMutation,
   useUpdateNegocioMutation,
 } = negociosApi;

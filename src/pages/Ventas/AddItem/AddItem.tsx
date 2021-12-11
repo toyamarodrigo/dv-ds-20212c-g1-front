@@ -125,7 +125,12 @@ export const AddItem = () => {
           </FormControl>
         </Stack>
         <Stack direction="row" justifyContent="flex-start" spacing={4} w="60%">
-          <Button colorScheme="whatsapp" leftIcon={<AddIcon />} onClick={() => handleSubmit()}>
+          <Button
+            colorScheme="whatsapp"
+            isDisabled={!prendaInputValue.value ? true : false}
+            leftIcon={<AddIcon />}
+            onClick={() => handleSubmit()}
+          >
             Agregar
           </Button>
           <Button variant="filled" onClick={() => navigate("/ventas")}>

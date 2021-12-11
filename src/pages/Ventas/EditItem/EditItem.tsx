@@ -97,7 +97,7 @@ export const EditItem = () => {
           <FormControl>
             <FormLabel fontWeight={600}>Cantidad</FormLabel>
             <NumberInput
-              defaultValue={1}
+              defaultValue={state.item.cantidad || 1}
               max={10}
               min={1}
               name="cantidad"

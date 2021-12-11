@@ -23,6 +23,7 @@ export interface Negocios {
 export interface Negocio {
   id?: number;
   sucursal: string;
+  ganancia?: number;
 }
 
 interface Pageable {
