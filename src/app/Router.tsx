@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import { Home, Negocios } from "../pages";
+import { Home, Negocios, NotFound } from "../pages";
 import { Clientes } from "../pages/Clientes";
 import { EditCliente } from "../pages/Clientes/EditCliente/EditCliente";
 import { NewCliente } from "../pages/Clientes/NewCliente/NewCliente";
@@ -19,7 +19,7 @@ import { NewVentaTarjeta } from "../pages/Ventas/NewVentaTarjeta/NewVentaTarjeta
 
 export const Router = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={"/"}>
       <Routes>
         <Route element={<Home />} path="/" />
         <Route element={<Negocios />} path="/negocios" />
@@ -38,6 +38,7 @@ export const Router = () => {
         <Route element={<NewPrenda />} path="/prendas/new" />
         <Route element={<EditPrenda />} path="/prendas/edit" />
         <Route element={<Prendas />} path="/prendas" />
+        <Route element={<NotFound />} path="*" />
       </Routes>
     </BrowserRouter>
   );
