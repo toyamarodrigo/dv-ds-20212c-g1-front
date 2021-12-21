@@ -18,21 +18,15 @@ export function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   const btnMenuRef = useRef();
-  const Links = [
-    { page: "/", name: "Tienda Ropita" },
-    // { page: "/about", name: "About" },
-    // { page: "/contact", name: "Contact" },
-  ];
+  const Links = [{ page: "/", name: "Tienda Ropita" }];
 
   return (
     <Stack
       alignItems="center"
       justifyContent="center"
-      position="absolute"
       px={{ base: 10, sm: 20, lg: 20, xl: 30 }}
       py={4}
       w="100%"
-      zIndex="1"
     >
       <Stack
         alignItems="center"
