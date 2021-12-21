@@ -35,7 +35,7 @@ export const NewVentaTarjeta = () => {
           setNegocioInputValue("");
           toast({
             title: "Item agregado",
-            description: "El item ha sido agregado correctamente",
+            description: "La venta tarjeta ha sido agregada correctamente",
             status: "success",
             duration: 5000,
             isClosable: true,
@@ -46,7 +46,7 @@ export const NewVentaTarjeta = () => {
     } catch {
       toast({
         title: "Error",
-        description: "Hubo un error al agregar el item",
+        description: "Hubo un error al agregar la venta tarjeta",
         status: "error",
         duration: 3000,
         isClosable: true,
