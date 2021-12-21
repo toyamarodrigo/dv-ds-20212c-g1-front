@@ -56,8 +56,7 @@ export const getNegociosByQuery = async ({ query }: any): Promise<Negocio[]> => 
             value: negocio.id,
             label: negocio.sucursal,
           };
-        })
-        .slice(0, 4);
+        });
 
       return negocios;
     });

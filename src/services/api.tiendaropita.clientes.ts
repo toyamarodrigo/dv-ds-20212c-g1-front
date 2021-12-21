@@ -65,8 +65,7 @@ export const getClientsByQuery = async ({ query }: any): Promise<Cliente[]> => {
             value: cliente.id,
             label: cliente.razonSocial,
           };
-        })
-        .slice(0, 4);
+        });
 
       return clientes;
     });

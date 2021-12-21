@@ -67,8 +67,7 @@ export const getPrendasByQuery = async ({ query }: any): Promise<Prenda[]> => {
             value: prenda.id,
             label: prenda.descripcion,
           };
-        })
-        .slice(0, 10);
+        });
 
       return prendas;
     });
