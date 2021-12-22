@@ -87,12 +87,11 @@ export const EditCliente = () => {
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Nombre nuevo de Cliente</FormLabel>
-            <Input isRequired name="nombre" placeholder={state.cliente.nombre} onChange={handleInputChange} />
+            <Input name="nombre" placeholder={state.cliente.nombre} onChange={handleInputChange} />
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Apellido nuevo de Cliente</FormLabel>
             <Input
-              isRequired 
               name="apellido"
               placeholder={state.cliente.apellido}
               onChange={handleInputChange}

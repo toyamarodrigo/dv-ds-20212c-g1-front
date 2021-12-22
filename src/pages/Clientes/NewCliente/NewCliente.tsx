@@ -79,11 +79,11 @@ export const NewCliente = () => {
         <Stack spacing={4} w="60%">
           <FormControl>
             <FormLabel fontWeight={600}>Nombre de cliente</FormLabel>
-            <Input isRequired name="nombre" placeholder="Jose..." onChange={handleInputChange} />
+            <Input name="nombre" placeholder="Jose..." onChange={handleInputChange} />
           </FormControl>
           <FormControl>
             <FormLabel fontWeight={600}>Apellido de cliente</FormLabel>
-            <Input isRequired name="apellido" placeholder="Maria..." onChange={handleInputChange} />
+            <Input name="apellido" placeholder="Maria..." onChange={handleInputChange} />
           </FormControl>
         </Stack>
         <Stack direction="row" justifyContent="flex-start" spacing={4} w="60%">
