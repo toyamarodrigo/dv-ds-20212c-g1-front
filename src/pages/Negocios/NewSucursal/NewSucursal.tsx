@@ -95,6 +95,7 @@ export const NewSucursal = () => {
               Nombre de Sucursal
             </FormLabel>
             <Input
+              isRequired 
               id="sucursal"
               name="sucursal"
               placeholder="Carrefour..."

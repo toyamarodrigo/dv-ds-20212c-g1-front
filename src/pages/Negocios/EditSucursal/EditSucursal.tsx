@@ -97,6 +97,7 @@ export const EditSucursal = () => {
           <FormControl isRequired isInvalid={isError}>
             <FormLabel fontWeight={600}>Nombre nuevo de Sucursal</FormLabel>
             <Input
+              isRequired 
               name="sucursal"
               placeholder={state.negocio.sucursal}
               onChange={handleInputChange}
