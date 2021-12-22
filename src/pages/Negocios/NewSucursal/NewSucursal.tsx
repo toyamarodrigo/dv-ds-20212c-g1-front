@@ -17,22 +17,35 @@ export const NewSucursal = () => {
   const [sucursal, setSucursal] = useState(initialValue);
   const toast = useToast();
 
+  const isError = sucursal.sucursal === "";
+
   const handleSubmit = async () => {
     try {
-      await addNegocio(sucursal)
-        .unwrap()
-        .then(() => {
-          setSucursal(initialValue);
-          toast({
-            title: "Sucursal agregada",
-            description: "La sucursal ha sido agregada correctamente",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-            position: "top",
+      if (!isError) {
+        await addNegocio(sucursal)
+          .unwrap()
+          .then(() => {
+            setSucursal(initialValue);
+            toast({
+              title: "Sucursal agregada",
+              description: "La sucursal ha sido agregada correctamente",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+            });
+            navigate("/negocios");
           });
-          navigate("/negocios");
+      } else {
+        toast({
+          title: "Error",
+          description: "Por favor, complete todos los campos",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
         });
+      }
     } catch {
       toast({
         title: "Error",
@@ -76,10 +89,17 @@ export const NewSucursal = () => {
         spacing={10}
         w="600px"
       >
-        <Stack spacing={4} w="60%">
-          <FormControl>
-            <FormLabel fontWeight={600}>Nombre de Sucursal</FormLabel>
-            <Input name="sucursal" placeholder="Carrefour..." onChange={handleInputChange} />
+        <Stack as="form" spacing={4} w="60%">
+          <FormControl isRequired isInvalid={isError}>
+            <FormLabel fontWeight={600} htmlFor="sucursal">
+              Nombre de Sucursal
+            </FormLabel>
+            <Input
+              id="sucursal"
+              name="sucursal"
+              placeholder="Carrefour..."
+              onChange={handleInputChange}
+            />
           </FormControl>
         </Stack>
         <Stack direction="row" justifyContent="flex-start" spacing={4} w="60%">
