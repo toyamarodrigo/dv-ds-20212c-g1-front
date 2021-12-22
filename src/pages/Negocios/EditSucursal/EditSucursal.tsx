@@ -18,22 +18,35 @@ export const EditSucursal = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
 
+  const isError = sucursal.sucursal === "";
+
   const handleSubmit = async () => {
     try {
-      await updateNegocio({ id: state.negocio.id, sucursal: sucursal.sucursal })
-        .unwrap()
-        .then(() => {
-          setSucursal(initialValue);
-          toast({
-            title: "Sucursal modificada",
-            description: "La sucursal ha sido modificada correctamente",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-            position: "top",
+      if (!isError) {
+        await updateNegocio({ id: state.negocio.id, sucursal: sucursal.sucursal })
+          .unwrap()
+          .then(() => {
+            setSucursal(initialValue);
+            toast({
+              title: "Sucursal modificada",
+              description: "La sucursal ha sido modificada correctamente",
+              status: "success",
+              duration: 5000,
+              isClosable: true,
+              position: "top",
+            });
+            navigate("/negocios");
           });
-          navigate("/negocios");
+      } else {
+        toast({
+          title: "Error",
+          description: "Por favor, complete todos los campos",
+          status: "error",
+          duration: 5000,
+          isClosable: true,
+          position: "top",
         });
+      }
     } catch {
       toast({
         title: "Error",
@@ -81,7 +94,7 @@ export const EditSucursal = () => {
           <FormControl>
             <FormLabel fontWeight={600}>ID Sucursal: {state.negocio.id}</FormLabel>
           </FormControl>
-          <FormControl>
+          <FormControl isRequired isInvalid={isError}>
             <FormLabel fontWeight={600}>Nombre nuevo de Sucursal</FormLabel>
             <Input
               name="sucursal"
