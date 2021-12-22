@@ -30,7 +30,7 @@ export const NewVentaEfectivo = () => {
           setClienteInputValue("");
           setNegocioInputValue("");
           toast({
-            title: "Item agregado",
+            title: "Venta efectivo agregada",
             description: "La venta efectivo ha sido agregada correctamente",
             status: "success",
             duration: 5000,

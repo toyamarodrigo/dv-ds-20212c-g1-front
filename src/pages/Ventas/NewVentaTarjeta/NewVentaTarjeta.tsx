@@ -34,7 +34,7 @@ export const NewVentaTarjeta = () => {
           setClienteInputValue("");
           setNegocioInputValue("");
           toast({
-            title: "Item agregado",
+            title: "Venta tarjeta agregada",
             description: "La venta tarjeta ha sido agregada correctamente",
             status: "success",
             duration: 5000,
