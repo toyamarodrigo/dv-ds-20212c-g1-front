@@ -28,7 +28,7 @@ export const SalesSucursal = () => {
 
   const navigate = useNavigate();
   const { data, isLoading, isSuccess } = useGetNegocioVentasByFechaQuery({
-    id: negocioInputValue.value,
+    id: negocioInputValue.value || "0",
     fecha: format(startDate, "dd-MM-yyyy"),
   });
 
