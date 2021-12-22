@@ -150,8 +150,8 @@ const DeleteModal = ({ isOpen, onClose, cancelRef, prenda, setPrenda }) => {
         .then(() => {
           setPrenda(null);
           toast({
-            title: "Cliente borrado",
-            description: "El cliente ha sido borrado correctamente",
+            title: "Prenda borrada",
+            description: "La prenda ha sido borrado correctamente",
             status: "success",
             duration: 5000,
             isClosable: true,
@@ -162,7 +162,7 @@ const DeleteModal = ({ isOpen, onClose, cancelRef, prenda, setPrenda }) => {
     } catch {
       toast({
         title: "Error",
-        description: "Hubo un error al borrar el cliente",
+        description: "Hubo un error al borrar la prenda",
         status: "error",
         duration: 3000,
         isClosable: true,

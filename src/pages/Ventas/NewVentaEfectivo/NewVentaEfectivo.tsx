@@ -31,7 +31,7 @@ export const NewVentaEfectivo = () => {
           setNegocioInputValue("");
           toast({
             title: "Item agregado",
-            description: "El item ha sido agregado correctamente",
+            description: "La venta efectivo ha sido agregada correctamente",
             status: "success",
             duration: 5000,
             isClosable: true,
@@ -42,7 +42,7 @@ export const NewVentaEfectivo = () => {
     } catch {
       toast({
         title: "Error",
-        description: "Hubo un error al agregar el item",
+        description: "Hubo un error al agregar la venta efectivo",
         status: "error",
         duration: 3000,
         isClosable: true,
