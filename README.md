@@ -33,6 +33,9 @@ npm install
 npm run dev
 ```
 
-### mock
+### Mock
 
 <https://www.figma.com/file/N3kZOQj5ajZSfHR0A6uqM7/Tienda-Ropita?node-id=0%3A1>
+
+### Screenshots
+![https://i.imgur.com/mfmGHsg.png](https://i.imgur.com/mfmGHsg.png)
